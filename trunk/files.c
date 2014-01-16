@@ -5,12 +5,15 @@ Files_t *allocateFile( int type, int level )
 {
   Files_t* handle;
   int value;
+  static int bugnum = 0;
 
   handle = (Files_t*)malloc(sizeof(Files_t));
 
   bzero( (void*)handle, sizeof(Files_t) );
 
   handle->type = type;
+
+  handle->next = (Files_t*)0;
 
   switch( type )
   {
@@ -32,8 +35,8 @@ Files_t *allocateFile( int type, int level )
     case ITEM_FILE:
       strcpy( handle->name, "item.txt");
       value = getRand(10);
-      if (value < 3) handle->u.item.unlockItem = INCREASE_STRENGTH;
-      else if (value < 6) handle->u.item.unlockItem = INCREASE_PROTECTION;
+      if (value < 2) handle->u.item.unlockItem = INCREASE_STRENGTH;
+      else if (value < 4) handle->u.item.unlockItem = INCREASE_PROTECTION;
       else 
       {
         handle->u.item.unlockItem = RESTORE_HEALTH;
@@ -43,11 +46,11 @@ Files_t *allocateFile( int type, int level )
       break;
 
     case BUG_FILE:
-      strcpy( handle->name, "bug.txt");
       handle->u.stats.level = level;
       handle->u.stats.health = level*2+getRand(3);
       handle->u.stats.strength = 1+getRand(level*2);
       handle->u.stats.protection = 1+getRand(level*2);
+      sprintf( handle->name, "bug%d.txt", bugnum++);
       break;
 
     default:
@@ -78,7 +81,8 @@ void cat_a_file( Files_t* handle )
       printf("  Use 'cd' to change subdirectories.\n");
       printf("  Use 'cat' to inspect files.\n");
       printf("  Use 'rm' to remove bugs (to allow movement).\n\n");
-      printf("  Find a special file to destroy the filesystem.\n\n");
+      printf("  Find a special file to destroy the filesystem.\n");
+      printf("\n");
       break;
 
     case BUG_FILE:
@@ -87,6 +91,13 @@ void cat_a_file( Files_t* handle )
       printf("\tHealth:     %3d\n", handle->u.stats.health);
       printf("\tStrength:   %3d\n", handle->u.stats.strength);
       printf("\tProtection: %3d\n", handle->u.stats.protection);
+      printf("\n");
+      break;
+
+    case ITEM_FILE:
+      printf("\nItem file\n");
+      printf("\tItem:   %3d\n", handle->u.item.unlockItem);
+      printf("\tValue:  %3d\n", handle->u.item.value);
       printf("\n");
       break;
 
