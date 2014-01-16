@@ -17,9 +17,13 @@
 #define ROOT_HELP_FILE		2
 #define HELP_FILE		3
 #define ITEM_FILE		4
-#define RUMOUR_FILE		5
-#define BUG_FILE		6
+#define BUG_FILE		5
 
+// Item File types
+
+#define INCREASE_STRENGTH	1
+#define INCREASE_PROTECTION	2
+#define RESTORE_HEALTH		3
 
 typedef struct {
   int level;
@@ -30,11 +34,8 @@ typedef struct {
 
 typedef struct {
   int unlockItem;
+  int value;
 } Items_t;
-
-typedef struct {
-  void (*funcptr)(int);
-} Func_t;
 
 struct Files_s;
 
@@ -45,7 +46,6 @@ typedef struct Files_s {
   union {
     Stats_t stats;
     Items_t item;
-    Func_t funcptr;
   } u;
 } Files_t;
 
