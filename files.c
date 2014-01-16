@@ -4,6 +4,7 @@
 Files_t *allocateFile( int type, int level )
 {
   Files_t* handle;
+  int value;
 
   handle = (Files_t*)malloc(sizeof(Files_t));
 
@@ -29,12 +30,24 @@ Files_t *allocateFile( int type, int level )
       break;
 
     case ITEM_FILE:
-      break;
-
-    case RUMOUR_FILE:
+      strcpy( handle->name, "item.txt");
+      value = getRand(10);
+      if (value < 3) handle->u.item.unlockItem = INCREASE_STRENGTH;
+      else if (value < 6) handle->u.item.unlockItem = INCREASE_PROTECTION;
+      else 
+      {
+        handle->u.item.unlockItem = RESTORE_HEALTH;
+        handle->u.item.value = (level/2) + getRand(4);
+      }
+      printf("Item %d\n", handle->u.item.unlockItem);
       break;
 
     case BUG_FILE:
+      strcpy( handle->name, "bug.txt");
+      handle->u.stats.level = level;
+      handle->u.stats.health = level*2+getRand(3);
+      handle->u.stats.strength = 1+getRand(level*2);
+      handle->u.stats.protection = 1+getRand(level*2);
       break;
 
     default:
@@ -68,6 +81,15 @@ void cat_a_file( Files_t* handle )
       printf("  Find a special file to destroy the filesystem.\n\n");
       break;
 
+    case BUG_FILE:
+      printf("\nBug stats\n");
+      printf("\tLevel:      %3d\n", handle->u.stats.level);
+      printf("\tHealth:     %3d\n", handle->u.stats.health);
+      printf("\tStrength:   %3d\n", handle->u.stats.strength);
+      printf("\tProtection: %3d\n", handle->u.stats.protection);
+      printf("\n");
+      break;
+
     default:
       assert(0);
   }
@@ -78,10 +100,11 @@ void cat_a_file( Files_t* handle )
 
 void addFileToList( Subdirs_t* subdir, Files_t* file )
 {
+  printf("adding %s\n", file->name);
   if (subdir->list)
   {
-    Files_t* walker;
-    walker = subdir->list;
+    Files_t* walker = subdir->list;
+    printf("%s  ", walker->name);
     while( walker->next ) walker = walker->next;
     walker->next = file;
     file->next = (Files_t*)0;
@@ -89,12 +112,15 @@ void addFileToList( Subdirs_t* subdir, Files_t* file )
   else 
   {
     subdir->list = file;
+    printf("empty");
   }
+printf("\n");
 
   return;
 }
 
 
+// BUG HERE...
 Files_t* removeFileFromList( Subdirs_t* subdir, char* filename )
 {
   Files_t* walker;
@@ -116,6 +142,7 @@ Files_t* removeFileFromList( Subdirs_t* subdir, char* filename )
     {
       Files_t* target = walker->next;
       walker->next = walker->next->next;
+      target->next = (Files_t*)0;
       return target;
     }
     walker = walker->next;

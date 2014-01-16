@@ -20,8 +20,24 @@ void buildSubtree( Subdirs_t* current, int level )
 {
   int children = numberOfChildren(level);
 
+  Files_t* allocateFile( int, int );
+
   current->root = current->next = (Subdirs_t*)0;
   current->list = (Files_t*)0;
+
+  // Add a bug?
+  if ((level > 1) && (getSRand() < 0.75))
+  {
+  printf("bug added\n");
+    addFileToList( current, allocateFile( BUG_FILE, level ) );
+  }
+
+  // Add an item?
+  if (getSRand() < (0.06*(float)level))
+  {
+  printf("item added\n");
+    addFileToList( current, allocateFile( ITEM_FILE, level ) );
+  }
 
   while (children--)
   {
@@ -40,6 +56,7 @@ void buildSubtree( Subdirs_t* current, int level )
     } else addNode( current, child );
 
     buildSubtree( child, level+1 );
+
   }
 
   return;
