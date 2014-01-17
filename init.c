@@ -29,12 +29,12 @@ void buildSubtree( Subdirs_t* current, int level )
   {
     int j;
 
-    if (level < 3) j = 1; else j = 2;
+    if (level < 3) j = 2; else j = 3;
     while (j--)
     {
-      if ((level > 1) && (getSRand() < 0.75))
+      if ((level > 0) && (getSRand() < 0.75))
       {
-        addFileToList( current, allocateFile( BUG_FILE, level ) );
+        addFileToList( current, allocateFile( BUG_FILE, getRand(level)+1 ) );
       }
     }
   }

@@ -123,19 +123,53 @@ void cmd_rm( char* file )
   Files_t* object;
 
   extern Subdirs_t* curpwd;
+  Files_t* findFileInList( Subdirs_t*, char* );
 
   object = removeFileFromList( curpwd, file );
 
   if (object)
   {
+
     if (!strncmp(object->name, "user.txt", filelen))
     {
-      printf("\nYou are dead.\n\n");
+      printf("\nYou are logged out.\n\n");
       exit(0);
     } 
     else if (!strncmp(object->name, "help.txt", filelen))
     {
       free(object);
+    }
+    else if (object->type == BUG_FILE)
+    {
+      Files_t* user = findFileInList( curpwd, "user.txt" );
+      float hitchance;
+
+      assert(user);
+
+      hitchance = hit(user->u.stats.strength,object->u.stats.strength);
+ 
+      if (getSRand() < hit(user->u.stats.strength,object->u.stats.strength))
+      {
+        int damage;
+        printf("hit\n");
+        damage = dmg(user->u.stats.level, user->u.stats.strength,
+                      object->u.stats.protection);
+
+        printf("damage is %d\n", damage);
+
+        object->u.stats.health -= damage;
+
+        if (object->u.stats.health <= 0) {
+          printf("bug is dead.\n");
+        } else {
+          addFileToList( curpwd, object );
+        }
+
+      } else {
+        printf("missed\n");
+        addFileToList( curpwd, object );
+      }
+    
     }
     else
     {
@@ -164,10 +198,13 @@ void processCommand( char *cmd, char *option )
 
 void performShell( void )
 {
-  char cmdline[80];
+  char cmdline[80] = {0};
+  char lastcmd[80] = {0};
   char cmd[80];
   char option[80];
   int ret;
+
+  printf("\nUser is logged in.\n\n");
 
   while (1) 
   {
@@ -175,9 +212,15 @@ void performShell( void )
     cmdline[0] = 0;
     (void)gets(cmdline);
 
+    if (cmdline[0] == '!') strcpy(cmdline, lastcmd);
+
     ret = sscanf(cmdline, "%s %s", cmd, option);
 
-    if (ret >= 1) processCommand( cmd, option );
+    if (ret >= 1) 
+    {
+      processCommand( cmd, option );
+      if (cmdline[0] != '!') strcpy(lastcmd, cmdline);
+    }
 
   }
 
