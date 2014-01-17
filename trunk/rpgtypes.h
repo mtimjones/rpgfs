@@ -68,4 +68,7 @@ typedef struct Subdirs_s {
   unsigned int attr;
 } Subdirs_t;
 
+#define hit(us,bs)	((float)us / ((float)us+(float)bs))
+#define dmg(ul, ua, bd) (int)((float)ul * (float)ua / (float)bd)+1
+
 #endif

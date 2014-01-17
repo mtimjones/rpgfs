@@ -47,9 +47,9 @@ Files_t *allocateFile( int type, int level )
 
     case BUG_FILE:
       handle->u.stats.level = level;
-      handle->u.stats.health = level*2+getRand(3);
-      handle->u.stats.strength = 1+getRand(level*2);
-      handle->u.stats.protection = 1+getRand(level*2);
+      handle->u.stats.health = level*2+getRand(2);
+      handle->u.stats.strength = 1+getRand(level+1);
+      handle->u.stats.protection = 1+getRand(level+1);
       sprintf( handle->name, "bug%d.txt", bugnum++);
       break;
 

@@ -10,10 +10,6 @@ int main()
   printf("Building the Filesystem...\n");
   rpginit();
 
-  printf("Populating the tree...\n");
-
-  printf("Starting the shell...\n");
-
   performShell();
 
   return 0;
