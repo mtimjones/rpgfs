@@ -51,6 +51,12 @@ void cmd_cd( char* file )
 
   int filelen = strlen(file);
 
+  if (fileInstancesInSubdir( curpwd, BUG_FILE ) )
+  {
+    printf("Can't cd at this time.\n");
+    return;
+  }
+
   if      (!strncmp(file, "..", filelen))
   {
     // User want to move up the filesystem.
@@ -177,7 +183,7 @@ void cmd_rm( char* file )
             }
             else
             {
-              user->u.stats.health++;
+              user->u.stats.health = ++user->u.stats.maxhealth;
             }
           }
 
@@ -187,32 +193,40 @@ void cmd_rm( char* file )
           addFileToList( curpwd, object );
         }
 
-        // Need a function to have all bugs attack user...
-        if (getSRand() < hit(object->u.stats.strength,user->u.stats.strength))
-        {
-          int damage;
-
-          printf("enemy hit\n");
-          damage = dmg(object->u.stats.level, object->u.stats.strength,
-                        user->u.stats.protection);
-
-          printf("your damage is %d\n", damage);
-
-          user->u.stats.health -= damage;
-
-          if (user->u.stats.health <= 0) {
-            printf("you have been logged out.\n");
-            // Need to emit level, stats, etc.
-            exit(0);
-          }
-
-        }
-
       } else {
         printf("missed\n");
         addFileToList( curpwd, object );
       }
+
+      bugsAttack( user );
     
+    }
+    else if (object->type == ITEM_FILE)
+    {
+      Files_t* user = findFileInList( curpwd, "user.txt" );
+
+      if (object->u.item.unlockItem == INCREASE_STRENGTH)
+      {
+        user->u.stats.strength++;
+        printf("Strength increased\n");
+      }
+      else if (object->u.item.unlockItem == INCREASE_PROTECTION)
+      {
+        user->u.stats.protection++;
+        printf("Protection increased\n");
+      }
+      else if (object->u.item.unlockItem == RESTORE_HEALTH)
+      {
+        int inc = object->u.item.value;
+        if (user->u.stats.health + object->u.item.value > 
+              user->u.stats.maxhealth)
+        {
+          inc = user->u.stats.maxhealth - user->u.stats.health;
+        }
+        user->u.stats.health += inc;
+
+        printf("Health restored %d\n", inc);
+      }
     }
     else
     {

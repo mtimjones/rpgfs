@@ -40,9 +40,8 @@ void buildSubtree( Subdirs_t* current, int level )
   }
 
   // Add an item?
-  if (getSRand() < (0.08*(float)level))
+  if (getSRand() < (0.15*(float)level))
   {
-  printf("item added\n");
     addFileToList( current, allocateFile( ITEM_FILE, level ) );
   }
 
