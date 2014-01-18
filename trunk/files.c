@@ -45,7 +45,6 @@ Files_t *allocateFile( int type, int level )
         handle->u.item.unlockItem = RESTORE_HEALTH;
         handle->u.item.value = (level/2) + getRand(4);
       }
-      printf("Item %d\n", handle->u.item.unlockItem);
       break;
 
     case BUG_FILE:
@@ -100,9 +99,22 @@ void cat_a_file( Files_t* handle )
       break;
 
     case ITEM_FILE:
-      printf("\nItem file\n");
-      printf("\tItem:   %3d\n", handle->u.item.unlockItem);
-      printf("\tValue:  %3d\n", handle->u.item.value);
+      switch (handle->u.item.unlockItem)
+      {
+        case INCREASE_STRENGTH:
+          printf("Strength increase\n");
+          
+          break;
+        case INCREASE_PROTECTION:
+          printf("Protection increase\n");
+          break;
+        case RESTORE_HEALTH:
+          printf("Health increase (%d)\n", handle->u.item.value);
+          break;
+        default:
+          assert(0);
+          break;
+      }
       printf("\n");
       break;
 
@@ -116,11 +128,9 @@ void cat_a_file( Files_t* handle )
 
 void addFileToList( Subdirs_t* subdir, Files_t* file )
 {
-  printf("adding %s\n", file->name);
   if (subdir->list)
   {
     Files_t* walker = subdir->list;
-    printf("%s  ", walker->name);
     while( walker->next ) walker = walker->next;
     walker->next = file;
     file->next = (Files_t*)0;
@@ -128,15 +138,12 @@ void addFileToList( Subdirs_t* subdir, Files_t* file )
   else 
   {
     subdir->list = file;
-    printf("empty");
   }
-printf("\n");
 
   return;
 }
 
 
-// BUG HERE...
 Files_t* removeFileFromList( Subdirs_t* subdir, char* filename )
 {
   Files_t* walker;
@@ -183,4 +190,20 @@ Files_t* findFileInList( Subdirs_t* subdir, char* filename )
   return walker;
 }
 
+
+int fileInstancesInSubdir( Subdirs_t* subdir, int type )
+{
+  Files_t* walker;
+  int count = 0;
+
+  walker = subdir->list;
+
+  while( walker )
+  {
+    if (walker->type == type) count++;
+    walker = walker->next;
+  }
+
+  return count;
+}
 
