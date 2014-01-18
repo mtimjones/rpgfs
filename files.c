@@ -20,8 +20,11 @@ Files_t *allocateFile( int type, int level )
     case USER_STATS_FILE:
       handle->u.stats.level = 1;
       handle->u.stats.health = 10;
-      handle->u.stats.strength = 1;
-      handle->u.stats.protection = 1;
+      handle->u.stats.maxhealth = 10;
+      handle->u.stats.strength = 2;
+      handle->u.stats.protection = 2;
+      handle->u.stats.xp = 0;
+      handle->u.stats.xptonextlevel = 10;
       strcpy(handle->name, "user.txt");
       break;
 
@@ -73,6 +76,8 @@ void cat_a_file( Files_t* handle )
       printf("\tHealth:     %3d\n", handle->u.stats.health);
       printf("\tStrength:   %3d\n", handle->u.stats.strength);
       printf("\tProtection: %3d\n", handle->u.stats.protection);
+      printf("\tXP/Next     %3d/%3d\n", 
+         handle->u.stats.xp, handle->u.stats.xptonextlevel);
       printf("\n");
       break;
 

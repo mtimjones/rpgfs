@@ -28,8 +28,11 @@
 typedef struct {
   int level;
   int health;
+  int maxhealth;
   int strength;
   int protection;
+  int xp;
+  int xptonextlevel;
 } Stats_t;
 
 typedef struct {

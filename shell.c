@@ -142,12 +142,9 @@ void cmd_rm( char* file )
     else if (object->type == BUG_FILE)
     {
       Files_t* user = findFileInList( curpwd, "user.txt" );
-      float hitchance;
 
       assert(user);
 
-      hitchance = hit(user->u.stats.strength,object->u.stats.strength);
- 
       if (getSRand() < hit(user->u.stats.strength,object->u.stats.strength))
       {
         int damage;
@@ -161,8 +158,54 @@ void cmd_rm( char* file )
 
         if (object->u.stats.health <= 0) {
           printf("bug is dead.\n");
+          user->u.stats.xp += 
+            (object->u.stats.strength + object->u.stats.protection);
+          if (user->u.stats.xp >= user->u.stats.xptonextlevel)
+          {
+            printf("Increased level\n");
+            user->u.stats.xptonextlevel = 
+              user->u.stats.xptonextlevel +
+                (int)(user->u.stats.xptonextlevel * 1.1);
+
+            if (getSRand() < 0.3)
+            {
+              user->u.stats.strength++;
+            }
+            else if (getSRand() < 0.6)
+            {
+              user->u.stats.protection++;
+            }
+            else
+            {
+              user->u.stats.health++;
+            }
+          }
+
+          return;
+
         } else {
           addFileToList( curpwd, object );
+        }
+
+        // Need a function to have all bugs attack user...
+        if (getSRand() < hit(object->u.stats.strength,user->u.stats.strength))
+        {
+          int damage;
+
+          printf("enemy hit\n");
+          damage = dmg(object->u.stats.level, object->u.stats.strength,
+                        user->u.stats.protection);
+
+          printf("your damage is %d\n", damage);
+
+          user->u.stats.health -= damage;
+
+          if (user->u.stats.health <= 0) {
+            printf("you have been logged out.\n");
+            // Need to emit level, stats, etc.
+            exit(0);
+          }
+
         }
 
       } else {
