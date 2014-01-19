@@ -18,6 +18,7 @@
 #define HELP_FILE		3
 #define ITEM_FILE		4
 #define BUG_FILE		5
+#define KEY_FILE		6
 
 // Item File types
 

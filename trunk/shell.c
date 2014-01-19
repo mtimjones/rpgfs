@@ -131,7 +131,7 @@ void cmd_rm( char* file )
   extern Subdirs_t* curpwd;
   Files_t* findFileInList( Subdirs_t*, char* );
 
-  object = removeFileFromList( curpwd, file );
+  object = findFileInList( curpwd, file );
 
   if (object)
   {
@@ -143,32 +143,40 @@ void cmd_rm( char* file )
     } 
     else if (!strncmp(object->name, "help.txt", filelen))
     {
+      (void)removeFileFromList( curpwd, file );
       free(object);
     }
     else if (object->type == BUG_FILE)
     {
       Files_t* user = findFileInList( curpwd, "user.txt" );
 
+      bugsAttack( user );
+
       assert(user);
 
       if (getSRand() < hit(user->u.stats.strength,object->u.stats.strength))
       {
         int damage;
-        printf("hit\n");
+
         damage = dmg(user->u.stats.level, user->u.stats.strength,
                       object->u.stats.protection);
 
-        printf("damage is %d\n", damage);
+        printf("%s damaged %d\n", object->name, damage);
 
         object->u.stats.health -= damage;
 
         if (object->u.stats.health <= 0) {
+
           printf("bug is dead.\n");
+          (void)removeFileFromList( curpwd, file );
+
           user->u.stats.xp += 
             (object->u.stats.strength + object->u.stats.protection);
+
           if (user->u.stats.xp >= user->u.stats.xptonextlevel)
           {
             printf("Increased level\n");
+            user->u.stats.level++;
             user->u.stats.xptonextlevel = 
               user->u.stats.xptonextlevel +
                 (int)(user->u.stats.xptonextlevel * 1.1);
@@ -189,21 +197,16 @@ void cmd_rm( char* file )
 
           return;
 
-        } else {
-          addFileToList( curpwd, object );
         }
 
-      } else {
-        printf("missed\n");
-        addFileToList( curpwd, object );
       }
-
-      bugsAttack( user );
     
     }
     else if (object->type == ITEM_FILE)
     {
       Files_t* user = findFileInList( curpwd, "user.txt" );
+
+      (void)removeFileFromList( curpwd, file );
 
       if (object->u.item.unlockItem == INCREASE_STRENGTH)
       {
@@ -232,6 +235,10 @@ void cmd_rm( char* file )
     {
       printf("File not found.\n");
     }
+  }
+  else
+  {
+    printf("File not found.\n");
   }
 
   return;

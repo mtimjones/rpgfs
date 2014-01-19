@@ -152,7 +152,7 @@ Files_t* removeFileFromList( Subdirs_t* subdir, char* filename )
 
   if (!walker) return (walker);
 
-  if (!strncmp(walker->name, filename, strlen(filename)))
+  if (!strncmp(walker->name, filename, strlen(walker->name)))
   {
     subdir->list = walker->next;
     walker->next = (Files_t*)0;
@@ -161,7 +161,7 @@ Files_t* removeFileFromList( Subdirs_t* subdir, char* filename )
 
   while (walker->next)
   {
-    if (!strncmp(walker->next->name, filename, strlen(filename)))
+    if (!strncmp(walker->next->name, filename, strlen(walker->name)))
     {
       Files_t* target = walker->next;
       walker->next = walker->next->next;
