@@ -3,6 +3,7 @@
 Subdirs_t* dirlist[7]={0, 0, 0, 0, 0, 0, 0};
 int cur_depth = 0;
 
+int unlocked = 0;
 
 void cmd_ls( void )
 {
@@ -141,6 +142,12 @@ void cmd_rm( char* file )
       printf("\nYou are logged out.\n\n");
       exit(0);
     } 
+    else if (!strncmp(object->name, "key.txt", filelen))
+    {
+      unlocked = 1;
+      (void)removeFileFromList( curpwd, file );
+      free(object);
+    }
     else if (!strncmp(object->name, "help.txt", filelen))
     {
       (void)removeFileFromList( curpwd, file );
@@ -245,6 +252,22 @@ void cmd_rm( char* file )
   return;
 }
 
+void cmd_format( void )
+{
+  Files_t* findFileInList( Subdirs_t*, char* );
+  extern Subdirs_t* curpwd;
+
+  Files_t* user = findFileInList( curpwd, "user.txt" );
+
+  cmd_cat("user.txt");
+
+  printf("Filesystem deleted.\n");
+
+  exit(0);
+
+  return;
+}
+
 
 void processCommand( char *cmd, char *option )
 {
@@ -255,6 +278,7 @@ void processCommand( char *cmd, char *option )
   else if (!strncmp(cmd, "cd", cmdlen)) cmd_cd( option );
   else if (!strncmp(cmd, "cat", cmdlen)) cmd_cat( option );
   else if (!strncmp(cmd, "rm", cmdlen)) cmd_rm( option );
+  else if (!strncmp(cmd, "format", cmdlen)) cmd_format();
   else printf("Command not recognized.\n");
 
   return;
