@@ -19,8 +19,8 @@ Files_t *allocateFile( int type, int level )
   {
     case USER_STATS_FILE:
       handle->u.stats.level = 1;
-      handle->u.stats.health = 10;
-      handle->u.stats.maxhealth = 10;
+      handle->u.stats.health = 15;
+      handle->u.stats.maxhealth = 15;
       handle->u.stats.strength = 2;
       handle->u.stats.protection = 2;
       handle->u.stats.xp = 0;
@@ -29,7 +29,7 @@ Files_t *allocateFile( int type, int level )
       break;
 
     case ROOT_HELP_FILE:
-      strcpy( handle->name, "help.txt");
+      strcpy( handle->name, "readme.txt");
       break;
 
     case HELP_FILE:

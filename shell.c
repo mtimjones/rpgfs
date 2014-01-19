@@ -148,7 +148,7 @@ void cmd_rm( char* file )
       (void)removeFileFromList( curpwd, file );
       free(object);
     }
-    else if (!strncmp(object->name, "help.txt", filelen))
+    else if (!strncmp(object->name, "readme.txt", filelen))
     {
       (void)removeFileFromList( curpwd, file );
       free(object);
@@ -180,8 +180,8 @@ void cmd_rm( char* file )
           printf("bug is dead.\n");
           (void)removeFileFromList( curpwd, file );
 
-          user->u.stats.xp += 
-            (object->u.stats.strength + object->u.stats.protection);
+          user->u.stats.xp += (object->u.stats.strength + 
+            object->u.stats.strength + object->u.stats.protection);
 
           if (user->u.stats.xp >= user->u.stats.xptonextlevel)
           {
@@ -201,21 +201,23 @@ void cmd_rm( char* file )
               printf("Protection increased.\n");
               user->u.stats.protection++;
             }
-            else
-            {
-              printf("Health increased.\n");
+
+            printf("Health increased.\n");
 printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
-              user->u.stats.maxhealth += (getRand(user->u.stats.level)+1);
-              user->u.stats.health += 
-                getRand(user->u.stats.maxhealth - user->u.stats.health);
+            user->u.stats.maxhealth += (getRand(user->u.stats.level)+1);
+            user->u.stats.health += 
+              ((user->u.stats.maxhealth - user->u.stats.health) / 2);
 printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
-            }
           }
 
           return;
 
         }
 
+      }
+      else
+      {
+        printf("File resists.\n");
       }
     
     }
@@ -243,9 +245,9 @@ printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
         {
           inc = user->u.stats.maxhealth - user->u.stats.health;
         }
-        user->u.stats.health += inc;
+        user->u.stats.health += inc + 1;
 
-        printf("Health restored %d\n", inc);
+        printf("Health restored %d\n", inc+1);
       }
     }
     else
