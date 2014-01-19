@@ -5,6 +5,8 @@
 
 Subdirs_t* curpwd;
 
+int total_nodes = 0;
+
 void addNode(Subdirs_t* cur, Subdirs_t* child)
 {
   Subdirs_t* walker = cur->root;
@@ -24,6 +26,8 @@ void buildSubtree( Subdirs_t* current, int level )
 
   current->root = current->next = (Subdirs_t*)0;
   current->list = (Files_t*)0;
+
+  total_nodes++;
 
   // Add a bug?
   {
@@ -96,6 +100,8 @@ void rpginit( void )
   addFileToList( root, handle );
   handle = allocateFile( ROOT_HELP_FILE, 1 );
   addFileToList( root, handle );
+
+  printf("Total nodes: %d\n", total_nodes);
 
   return;
 }

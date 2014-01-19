@@ -72,10 +72,11 @@ void cat_a_file( Files_t* handle )
     case USER_STATS_FILE:
       printf("\nUser stats\n");
       printf("\tLevel:      %3d\n", handle->u.stats.level);
-      printf("\tHealth:     %3d\n", handle->u.stats.health);
+      printf("\tHealth:     %3d / %3d\n", 
+        handle->u.stats.health, handle->u.stats.maxhealth);
       printf("\tStrength:   %3d\n", handle->u.stats.strength);
       printf("\tProtection: %3d\n", handle->u.stats.protection);
-      printf("\tXP/Next     %3d/%3d\n", 
+      printf("\tXP/Next     %3d / %3d\n", 
          handle->u.stats.xp, handle->u.stats.xptonextlevel);
       printf("\n");
       break;

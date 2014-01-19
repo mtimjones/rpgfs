@@ -191,7 +191,8 @@ void cmd_rm( char* file )
             }
             else
             {
-              user->u.stats.health = ++user->u.stats.maxhealth;
+              user->u.stats.health = 
+                user->u.stats.maxhealth + getRand(user->u.stats.level);
             }
           }
 
