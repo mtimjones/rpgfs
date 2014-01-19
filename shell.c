@@ -144,9 +144,16 @@ void cmd_rm( char* file )
     } 
     else if (!strncmp(object->name, "key.txt", filelen))
     {
+      if (fileInstancesInSubdir( curpwd, BUG_FILE ) )
+      {
+        printf("Can't access this file at this time.\n");
+        return;
+      }
+
       unlocked = 1;
       (void)removeFileFromList( curpwd, file );
       free(object);
+      printf("Format command has been unlocked.\n");
     }
     else if (!strncmp(object->name, "readme.txt", filelen))
     {
@@ -289,6 +296,8 @@ void cmd_format( void )
     cmd_cat("user.txt");
 
     printf("Filesystem deleted.\n");
+
+    printf("You have been logged out.\n");
 
     exit(0);
   }
