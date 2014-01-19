@@ -43,7 +43,7 @@ Files_t *allocateFile( int type, int level )
       else 
       {
         handle->u.item.unlockItem = RESTORE_HEALTH;
-        handle->u.item.value = (level/2) + getRand(4);
+        handle->u.item.value = (level/2) + getRand(3)+1;
       }
       break;
 
@@ -90,7 +90,7 @@ void cat_a_file( Files_t* handle )
       printf("  Use 'cd' to change subdirectories.\n");
       printf("  Use 'cat' to inspect files.\n");
       printf("  Use 'rm' to remove bugs (to allow movement).\n\n");
-      printf("  Find a special file to destroy the filesystem.\n");
+      printf("  Find key.txt to unlock format and destroy the filesystem.\n");
       printf("\n");
       break;
 

@@ -190,16 +190,22 @@ void cmd_rm( char* file )
 
             if (getSRand() < 0.3)
             {
+              printf("Strength increased.\n");
               user->u.stats.strength++;
             }
             else if (getSRand() < 0.6)
             {
+              printf("Protection increased.\n");
               user->u.stats.protection++;
             }
             else
             {
-              user->u.stats.health = 
-                user->u.stats.maxhealth + getRand(user->u.stats.level);
+              printf("Health increased.\n");
+printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
+              user->u.stats.maxhealth += (getRand(user->u.stats.level)+1);
+              user->u.stats.health += 
+                getRand(user->u.stats.maxhealth - user->u.stats.health);
+printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
             }
           }
 
@@ -257,13 +263,20 @@ void cmd_format( void )
   Files_t* findFileInList( Subdirs_t*, char* );
   extern Subdirs_t* curpwd;
 
-  Files_t* user = findFileInList( curpwd, "user.txt" );
+  if (unlocked)
+  {
+    Files_t* user = findFileInList( curpwd, "user.txt" );
 
-  cmd_cat("user.txt");
+    cmd_cat("user.txt");
 
-  printf("Filesystem deleted.\n");
+    printf("Filesystem deleted.\n");
 
-  exit(0);
+    exit(0);
+  }
+  else 
+  {
+    printf("Command not found.\n");
+  }
 
   return;
 }
