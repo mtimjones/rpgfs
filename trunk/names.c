@@ -7,7 +7,7 @@ typedef struct {
   char used;
 } names_t;
 
-#define MAX_NAMES  122
+#define MAX_NAMES  133
 
 names_t names[MAX_NAMES] = {
   {"main",0},
@@ -131,8 +131,20 @@ names_t names[MAX_NAMES] = {
   {"gold",0},
   {"silver",0},
   {"easy",0},
+  {"new",0},
+  {"list",0},
+  {"talks",0},
+  {"stuff",0},
+  {"newest",0},
+  {"bands",0},
+  {"users",0},
+  {"funcs",0},
+  {"waste",0},
+  {"murmur",0},
+  {"deep",0},
   {"files",0}
 };
+
 
 
 

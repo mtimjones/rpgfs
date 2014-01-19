@@ -178,6 +178,7 @@ void cmd_rm( char* file )
 // the user to pick one.  After the selection, delete the other two.
 
           printf("bug is dead.\n");
+          user->u.stats.bugs_killed++;
           (void)removeFileFromList( curpwd, file );
 
           user->u.stats.xp += (object->u.stats.strength + 
@@ -193,13 +194,19 @@ void cmd_rm( char* file )
 
             if (getSRand() < 0.3)
             {
-              printf("Strength increased.\n");
-              user->u.stats.strength++;
+              if (user->u.stats.strength < 10)
+              {
+                printf("Strength increased.\n");
+                user->u.stats.strength++;
+              }
             }
             else if (getSRand() < 0.6)
             {
-              printf("Protection increased.\n");
-              user->u.stats.protection++;
+              if (user->u.stats.protection < 10)
+              {
+                printf("Protection increased.\n");
+                user->u.stats.protection++;
+              }
             }
 
             printf("Health increased.\n");
@@ -225,17 +232,24 @@ printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
     {
       Files_t* user = findFileInList( curpwd, "user.txt" );
 
+      user->u.stats.items_used++;
       (void)removeFileFromList( curpwd, file );
 
       if (object->u.item.unlockItem == INCREASE_STRENGTH)
       {
-        user->u.stats.strength++;
-        printf("Strength increased\n");
+        if (user->u.stats.strength < 10)
+        {
+          user->u.stats.strength++;
+          printf("Strength increased\n");
+        }
       }
       else if (object->u.item.unlockItem == INCREASE_PROTECTION)
       {
-        user->u.stats.protection++;
-        printf("Protection increased\n");
+        if (user->u.stats.protection < 10)
+        {
+          user->u.stats.protection++;
+          printf("Protection increased\n");
+        }
       }
       else if (object->u.item.unlockItem == RESTORE_HEALTH)
       {

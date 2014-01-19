@@ -25,8 +25,7 @@ void bugsAttack( Files_t* user )
 
         if (user->u.stats.health <= 0)
         {
-          printf("You are logged out.\n");
-          exit(0);
+          dead( user );
         }
 
       }
@@ -36,4 +35,25 @@ void bugsAttack( Files_t* user )
   }
 
   return;
+}
+
+
+void dead( Files_t* user )
+{
+   extern int cur_depth;
+
+   printf("You have been logged out at level %d.\n\n", cur_depth);
+   printf("Your stats were:\n\n");
+   printf("\tLevel:      %3d\n", user->u.stats.level);
+   printf("\tHealth:     %3d / %3d\n",
+     user->u.stats.health, user->u.stats.maxhealth);
+   printf("\tStrength:   %3d\n", user->u.stats.strength);
+   printf("\tProtection: %3d\n", user->u.stats.protection);
+   printf("\tXP/Next     %3d / %3d\n",
+      user->u.stats.xp, user->u.stats.xptonextlevel);
+   printf("\tBugs Killed %3d\n", user->u.stats.bugs_killed);
+   printf("\tItems Used  %3d\n", user->u.stats.items_used);
+   printf("\n");
+
+   exit(0);
 }

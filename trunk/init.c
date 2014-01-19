@@ -126,6 +126,7 @@ void rpginit( void )
 
   // Place key file at a deep node.
   handle = allocateFile( KEY_FILE, keyloc.level );
+printf("subdir = %s / %d\n", keyloc.node->name, keyloc.level);
   addFileToList( keyloc.node, handle );
 
   printf("Total nodes: %d\n", total_nodes);

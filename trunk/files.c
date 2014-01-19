@@ -25,6 +25,8 @@ Files_t *allocateFile( int type, int level )
       handle->u.stats.protection = 2;
       handle->u.stats.xp = 0;
       handle->u.stats.xptonextlevel = 10;
+      handle->u.stats.bugs_killed = 0;
+      handle->u.stats.items_used = 0;
       strcpy(handle->name, "user.txt");
       break;
 
@@ -43,13 +45,13 @@ Files_t *allocateFile( int type, int level )
       else 
       {
         handle->u.item.unlockItem = RESTORE_HEALTH;
-        handle->u.item.value = (level/2) + getRand(3)+1;
+        handle->u.item.value = level + getRand(level);
       }
       break;
 
     case BUG_FILE:
       handle->u.stats.level = level;
-      handle->u.stats.health = level*2+getRand(2);
+      handle->u.stats.health = 5+getRand(level*2);
       handle->u.stats.strength = 1+getRand(level+1);
       handle->u.stats.protection = 1+getRand(level+1);
       sprintf( handle->name, "bug%d.txt", bugnum++);
@@ -108,7 +110,6 @@ void cat_a_file( Files_t* handle )
       {
         case INCREASE_STRENGTH:
           printf("Strength increase\n");
-          
           break;
         case INCREASE_PROTECTION:
           printf("Protection increase\n");

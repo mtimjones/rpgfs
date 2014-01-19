@@ -34,6 +34,8 @@ typedef struct {
   int protection;
   int xp;
   int xptonextlevel;
+  int bugs_killed;
+  int items_used;
 } Stats_t;
 
 typedef struct {
