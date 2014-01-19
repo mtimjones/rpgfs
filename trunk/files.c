@@ -55,6 +55,10 @@ Files_t *allocateFile( int type, int level )
       sprintf( handle->name, "bug%d.txt", bugnum++);
       break;
 
+    case KEY_FILE:
+      sprintf( handle->name, "key.txt");
+      break;
+
     default:
       assert(0);
   }
@@ -117,6 +121,10 @@ void cat_a_file( Files_t* handle )
           break;
       }
       printf("\n");
+      break;
+
+    case KEY_FILE:
+      printf("Format command unlocked.\n");
       break;
 
     default:

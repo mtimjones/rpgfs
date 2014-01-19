@@ -7,6 +7,13 @@ Subdirs_t* curpwd;
 
 int total_nodes = 0;
 
+typedef struct {
+  Subdirs_t* node;
+  int        level;
+} deepest_t;
+
+deepest_t keyloc = {(Subdirs_t*)0, 0};
+
 void addNode(Subdirs_t* cur, Subdirs_t* child)
 {
   Subdirs_t* walker = cur->root;
@@ -26,6 +33,22 @@ void buildSubtree( Subdirs_t* current, int level )
 
   current->root = current->next = (Subdirs_t*)0;
   current->list = (Files_t*)0;
+
+  if (level > keyloc.level)
+  {
+    // If first time init
+    if (keyloc.level == 0)
+    {
+      keyloc.level = level;
+      keyloc.node = current;
+    }
+    else if (getSRand() < 0.5)
+    {
+      // Randomly change location at same level
+      keyloc.level = level;
+      keyloc.node = current;
+    }
+  }
 
   total_nodes++;
 
@@ -100,6 +123,10 @@ void rpginit( void )
   addFileToList( root, handle );
   handle = allocateFile( ROOT_HELP_FILE, 1 );
   addFileToList( root, handle );
+
+  // Place key file at a deep node.
+  handle = allocateFile( KEY_FILE, keyloc.level );
+  addFileToList( keyloc.node, handle );
 
   printf("Total nodes: %d\n", total_nodes);
 
