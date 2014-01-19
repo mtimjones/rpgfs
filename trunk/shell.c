@@ -174,6 +174,9 @@ void cmd_rm( char* file )
 
         if (object->u.stats.health <= 0) {
 
+// Instead, add three files (health, strength, protection), and allow
+// the user to pick one.  After the selection, delete the other two.
+
           printf("bug is dead.\n");
           (void)removeFileFromList( curpwd, file );
 
