@@ -77,4 +77,27 @@ typedef struct Subdirs_s {
 #define hit(us,bs)	((float)us / ((float)us+(float)bs))
 #define dmg(ul, ua, bd) (int)((float)ul * (float)ua / (float)bd)+1
 
+// APIs
+int fileInstancesInSubdir( Subdirs_t*, int );
+Files_t* findFileInList( Subdirs_t*, char* );
+Files_t* removeFileFromList( Subdirs_t*, char* );
+void addFileToList( Subdirs_t*, Files_t* );
+
+void game_over( Files_t* );
+
+int numberOfChildren( int );
+
+char* getName( void );
+
+void rpginit( void );
+
+void performShell( void );
+
+void cat_a_file( Files_t* );
+
+void bugsAttack( Files_t* );
+
+extern Subdirs_t* curpwd;
+
 #endif
+

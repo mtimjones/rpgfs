@@ -108,12 +108,7 @@ void cmd_cd( char* file )
 
 void cmd_cat( char* file )
 {
-  int filelen = strlen(file);
   Files_t* handle;
-
-  Files_t* findFileInList( Subdirs_t*, char* );
-
-  extern Subdirs_t* curpwd;
 
   handle = findFileInList( curpwd, file );
 
@@ -129,9 +124,6 @@ void cmd_rm( char* file )
   int filelen = strlen(file);
   Files_t* object;
 
-  extern Subdirs_t* curpwd;
-  Files_t* findFileInList( Subdirs_t*, char* );
-
   object = findFileInList( curpwd, file );
 
   if (object)
@@ -139,7 +131,7 @@ void cmd_rm( char* file )
 
     if (!strncmp(object->name, "user.txt", filelen))
     {
-      printf("\nYou are logged out.\n\n");
+      game_over( object );
       exit(0);
     } 
     else if (!strncmp(object->name, "key.txt", filelen))
@@ -164,9 +156,9 @@ void cmd_rm( char* file )
     {
       Files_t* user = findFileInList( curpwd, "user.txt" );
 
-      bugsAttack( user );
-
       assert(user);
+
+      bugsAttack( user );
 
       if (getSRand() < hit(user->u.stats.strength,object->u.stats.strength))
       {
@@ -219,11 +211,9 @@ void cmd_rm( char* file )
             }
 
             printf("Health increased.\n");
-printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
             user->u.stats.maxhealth += (getRand(user->u.stats.level)+1);
             user->u.stats.health += 
               ((user->u.stats.maxhealth - user->u.stats.health) / 2);
-printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
           }
 
           return;
@@ -235,47 +225,54 @@ printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
       {
         printf("File resists.\n");
       }
-    
+
     }
     else if (object->type == ITEM_FILE)
     {
-      Files_t* user = findFileInList( curpwd, "user.txt" );
-
-      user->u.stats.items_used++;
-      (void)removeFileFromList( curpwd, file );
-
-      if (object->u.item.unlockItem == INCREASE_STRENGTH)
+      if (fileInstancesInSubdir( curpwd, BUG_FILE ) )
       {
-        if (user->u.stats.strength < 10)
+        printf("Can't rm at this time.\n");
+      }
+      else
+      {
+        Files_t* user = findFileInList( curpwd, "user.txt" );
+
+        user->u.stats.items_used++;
+        (void)removeFileFromList( curpwd, file );
+
+        if (object->u.item.unlockItem == INCREASE_STRENGTH)
         {
-          user->u.stats.strength++;
-          printf("Strength increased\n");
+          if (user->u.stats.strength < 10)
+          {
+            user->u.stats.strength++;
+            printf("Strength increased\n");
+          }
+        }
+        else if (object->u.item.unlockItem == INCREASE_PROTECTION)
+        {
+          if (user->u.stats.protection < 10)
+          {
+            user->u.stats.protection++;
+            printf("Protection increased\n");
+          }
+        }
+        else if (object->u.item.unlockItem == RESTORE_HEALTH)
+        {
+          int inc = object->u.item.value;
+          if (user->u.stats.health + object->u.item.value > 
+                user->u.stats.maxhealth)
+          {
+            inc = user->u.stats.maxhealth - user->u.stats.health;
+          }
+          user->u.stats.health += inc + 1;
+  
+          printf("Health restored %d\n", inc+1);
+        }
+        else
+        {
+          printf("File not found.\n");
         }
       }
-      else if (object->u.item.unlockItem == INCREASE_PROTECTION)
-      {
-        if (user->u.stats.protection < 10)
-        {
-          user->u.stats.protection++;
-          printf("Protection increased\n");
-        }
-      }
-      else if (object->u.item.unlockItem == RESTORE_HEALTH)
-      {
-        int inc = object->u.item.value;
-        if (user->u.stats.health + object->u.item.value > 
-              user->u.stats.maxhealth)
-        {
-          inc = user->u.stats.maxhealth - user->u.stats.health;
-        }
-        user->u.stats.health += inc + 1;
-
-        printf("Health restored %d\n", inc+1);
-      }
-    }
-    else
-    {
-      printf("File not found.\n");
     }
   }
   else
@@ -288,18 +285,13 @@ printf("%d/%d\n", user->u.stats.health, user->u.stats.maxhealth);
 
 void cmd_format( void )
 {
-  Files_t* findFileInList( Subdirs_t*, char* );
-  extern Subdirs_t* curpwd;
-
   if (unlocked)
   {
     Files_t* user = findFileInList( curpwd, "user.txt" );
 
-    cmd_cat("user.txt");
+    printf("Filesystem deleted.\n\n");
 
-    printf("Filesystem deleted.\n");
-
-    printf("You have been logged out.\n");
+    game_over( user );
 
     exit(0);
   }
