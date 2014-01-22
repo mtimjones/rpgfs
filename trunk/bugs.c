@@ -25,7 +25,7 @@ void bugsAttack( Files_t* user )
 
         if (user->u.stats.health <= 0)
         {
-          dead( user );
+          game_over( user );
         }
 
       }
@@ -38,11 +38,11 @@ void bugsAttack( Files_t* user )
 }
 
 
-void dead( Files_t* user )
+void game_over( Files_t* user )
 {
    extern int cur_depth;
 
-   printf("You have been logged out at level %d.\n\n", cur_depth);
+   printf("You have been unexpectedly logged out at level %d.\n\n", cur_depth);
    printf("Your stats were:\n\n");
    printf("\tLevel:      %3d\n", user->u.stats.level);
    printf("\tHealth:     %3d / %3d\n",

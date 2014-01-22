@@ -34,7 +34,7 @@ void buildSubtree( Subdirs_t* current, int level )
   current->root = current->next = (Subdirs_t*)0;
   current->list = (Files_t*)0;
 
-  if (level > keyloc.level)
+  if (level >= keyloc.level)
   {
     // If first time init
     if (keyloc.level == 0)
@@ -42,7 +42,7 @@ void buildSubtree( Subdirs_t* current, int level )
       keyloc.level = level;
       keyloc.node = current;
     }
-    else if (getSRand() < 0.5)
+    else if (getSRand() < 0.8)
     {
       // Randomly change location at same level
       keyloc.level = level;
@@ -76,7 +76,7 @@ void buildSubtree( Subdirs_t* current, int level )
   {
     Subdirs_t* child = malloc(sizeof(Subdirs_t));
 
-    strcpy(child->name, (const char *)getName());
+    strcpy(child->name, getName());
 
     child->parent = current;
 
@@ -126,7 +126,6 @@ void rpginit( void )
 
   // Place key file at a deep node.
   handle = allocateFile( KEY_FILE, keyloc.level );
-printf("subdir = %s / %d\n", keyloc.node->name, keyloc.level);
   addFileToList( keyloc.node, handle );
 
   printf("Total nodes: %d\n", total_nodes);
