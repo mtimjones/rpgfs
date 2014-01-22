@@ -146,8 +146,6 @@ names_t names[MAX_NAMES] = {
 };
 
 
-
-
 char *getName( void )
 {
   int index = getRand(MAX_NAMES);
