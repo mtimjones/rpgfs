@@ -11,18 +11,18 @@ void cmd_ls( void )
   Subdirs_t* cur = curpwd->root;
   Files_t* files = curpwd->list;
 
-  printf(".\n");
-  printf("..\n");
+  printf("drwxrwxr-x .\n");
+  printf("drwxrwxr-x ..\n");
 
   while (cur)
   {
-    printf("%s\n", cur->name);
+    printf("drwxrwxr-x %s\n", cur->name);
     cur = cur->next;
   }
 
   while (files)
   {
-    printf("%s\n", files->name);
+    printf("-rw-rw-r-- %s\n", files->name);
     files = files->next;
   }
 
