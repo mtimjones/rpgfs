@@ -334,7 +334,7 @@ void performShell( void )
   {
     printf("$ ");
     cmdline[0] = 0;
-    (void)gets(cmdline);
+    fgets(cmdline, sizeof(cmdline), stdin);
 
     if (cmdline[0] == '!') strcpy(cmdline, lastcmd);
 

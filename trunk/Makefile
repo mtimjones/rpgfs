@@ -1,6 +1,11 @@
 
-rpgfs: files.c init.c levels.c main.c names.c shell.c bugs.c
-	gcc -Wall -g -o $@ $^
+OBJECTS=files.o init.o levels.o main.o names.o shell.o bugs.o
+
+rpgfs: $(OBJECTS)
+	$(CC) -Werror -Wall -g -o $@ $^
+
+%.o: %.c
+	$(CC) -Wall -Werror -g -c $^
 
 clean:
-	rm -f rpgfs
+	$(RM) $(OBJECTS) *~ rpgfs
